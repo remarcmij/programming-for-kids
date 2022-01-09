@@ -13,6 +13,17 @@ from io import StringIO
 
 PLACE_HOLDER = "⚂"
 
+GET_VALUE_CODE_SNIPPET = """
+index = 0
+def get_value():
+    global index
+    global values
+    value = values[index]
+    index += 1
+    return value
+
+"""
+
 
 def run_card(file_name, values=range(1, 21)):
     """Returns a list of printed lines"""
@@ -31,11 +42,11 @@ def run_card(file_name, values=range(1, 21)):
                 lines.append(line)
         prog_text = "\n".join(lines)
 
-    # replace PLACE_HOLDER symbols with actual values
-    value_index = 0
-    while prog_text.find(PLACE_HOLDER) != -1:
-        prog_text = prog_text.replace(PLACE_HOLDER, str(values[value_index]), 1)
-        value_index += 1
+    # replace PLACE_HOLDER symbols with a call to get_value()
+    prog_text = prog_text.replace(PLACE_HOLDER, "get_value()")
+
+    # add code snippets for values list and get_value function
+    prog_text = f"\nvalues = {list(values)}\n" + GET_VALUE_CODE_SNIPPET + prog_text
 
     # capture stdout output
     old_stdout = sys.stdout
@@ -110,8 +121,8 @@ def test_06():
 
 def test_07():
     """remove() element from list"""
-    *_, winner = run_card("07", [1])
-    assert winner == "john"
+    *_, winner = run_card("07", [1, 2])
+    assert winner == "penny"
 
 
 def test_08():
@@ -161,5 +172,5 @@ def test_11():
 
 def test_13():
     """Haunted house"""
-    *_, output = run_card("13", [1, 3])
+    *_, output = run_card("13", [3, 6, 1, 3])
     assert output == "phew! no ghost!"
