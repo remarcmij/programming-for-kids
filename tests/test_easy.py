@@ -18,7 +18,7 @@ index = 0
 def get_value():
     global index
     global values
-    value = values[index]
+    value = values[index % len(values)]
     index += 1
     return value
 
@@ -53,7 +53,7 @@ def run_card(file_name, values=range(1, 21)):
     sys.stdout = my_stdout = StringIO()
 
     # pylint: disable = exec-used
-    exec(prog_text)
+    exec(prog_text, dict())
 
     sys.stdout = old_stdout
     return my_stdout.getvalue().strip().split("\n")
@@ -173,5 +173,52 @@ def test_11():
 def test_13():
     """Haunted house"""
     output = run_card("13", [3, 6, 1, 3])
-    assert output[0] == "RUUUNNN!!"
-    assert output[1] == "phew! no ghost!"
+    assert output[-2] == "RUUUNNN!!"
+    assert output[-1] == "phew! no ghost!"
+
+
+def test_14():
+    """sort / reverse"""
+    *_, output = run_card("14", [3, 5, 2])
+    a_0 = int(output)
+    assert a_0 == 5
+
+
+def test_15():
+    """recursion"""
+    output = run_card("15", [1, 3, 4, 3, 8])
+    enemy_hp = int(output[-2])
+    my_hp = int(output[-1])
+    assert enemy_hp == -4
+    assert my_hp == 16
+
+
+def test_16():
+    """dictionary lookup"""
+    *_, output = run_card("16", [1])
+    assert "Magenta pink" in output
+
+
+def test_17():
+    """lambda functions"""
+    *_, output = run_card("17", [13, 5])
+    result = int(output)
+    assert result == 13
+
+
+def test_18():
+    """mixed scope"""
+    *_, output = run_card("18", [11])
+    x = int(output)
+    assert x == 11
+
+
+def test_19():
+    """global scope"""
+    *_, output = run_card("19", [11])
+    x = int(output)
+    assert x == 3
+
+
+if __name__ == "__main__":
+    test_17()
