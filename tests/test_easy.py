@@ -172,5 +172,6 @@ def test_11():
 
 def test_13():
     """Haunted house"""
-    *_, output = run_card("13", [3, 6, 1, 3])
-    assert output == "phew! no ghost!"
+    output = run_card("13", [3, 6, 1, 3])
+    assert output[0] == "RUUUNNN!!"
+    assert output[1] == "phew! no ghost!"
