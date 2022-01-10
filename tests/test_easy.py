@@ -220,5 +220,24 @@ def test_19():
     assert x == 3
 
 
+def test_20():
+    """compare strings"""
+    output = run_card("20", [1])
+    # strings are equal => two lines should be printed
+    assert len(output) == 2
+
+    output = run_card("20", [1, 2, 3, 4])
+    # strings are not equal => only one lines should be printed
+    assert len(output) == 1
+
+
+def test_21():
+    """delta encoding"""
+    output = run_card("21", [13])
+
+    numbers = [int(x) for x in output[-2][1 : len(output[-2]) - 1].split(", ")]
+    assert numbers == [1, 1, 1, 1, 1, 1, -3]
+
+
 if __name__ == "__main__":
-    test_17()
+    test_21()
